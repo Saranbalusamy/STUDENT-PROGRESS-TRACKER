@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    container_name: student-tracker-db
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: student-tracker
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - student-tracker-network
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: student-tracker-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://admin:password123@mongodb:27017/student-tracker?authSource=admin
+      JWT_SECRET: your-super-secret-jwt-key-here-2024-production
+      PORT: 5002
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "5002:5002"
+    depends_on:
+      - mongodb
+    networks:
+      - student-tracker-network
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  # Frontend React App
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: student-tracker-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - student-tracker-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  student-tracker-network:
+    driver: bridge
