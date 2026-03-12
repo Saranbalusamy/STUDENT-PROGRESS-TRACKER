@@ -19,7 +19,6 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(helmet());
 app.use(cors({ 
   origin: [
     'http://localhost:3000', 
@@ -30,6 +29,9 @@ app.use(cors({
     /\.vercel\.app$/
   ],
   credentials: true
+}));
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
