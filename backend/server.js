@@ -21,7 +21,14 @@ connectDB();
 // Middleware
 app.use(helmet());
 app.use(cors({ 
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3002'] 
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:3001', 
+    'http://localhost:3002',
+    'https://student-progress-tracker-8wq3.onrender.com',
+    /\.vercel\.app$/
+  ],
+  credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
