@@ -26,6 +26,7 @@ app.use(cors({
     'http://localhost:3001', 
     'http://localhost:3002',
     'https://student-progress-tracker-8wq3.onrender.com',
+    'https://student-progress-tracker-tan.vercel.app',
     /\.vercel\.app$/
   ],
   credentials: true
